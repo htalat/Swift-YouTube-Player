@@ -23,6 +23,7 @@ public enum YouTubePlayerEvents: String {
     case Ready = "onReady"
     case StateChange = "onStateChange"
     case PlaybackQualityChange = "onPlaybackQualityChange"
+    case PlayerCurrentTime = "onCurrentTime"
 }
 
 public enum YouTubePlaybackQuality: String {
@@ -38,6 +39,8 @@ public protocol YouTubePlayerDelegate: class {
     func playerReady(_ videoPlayer: YouTubePlayerView)
     func playerStateChanged(_ videoPlayer: YouTubePlayerView, playerState: YouTubePlayerState)
     func playerQualityChanged(_ videoPlayer: YouTubePlayerView, playbackQuality: YouTubePlaybackQuality)
+    func playerCurrentTime(_ videoPlayer: YouTubePlayerView, currentTime: Double)
+    
 }
 
 // Make delegate methods optional by providing default implementations
@@ -46,6 +49,7 @@ public extension YouTubePlayerDelegate {
     func playerReady(_ videoPlayer: YouTubePlayerView) {}
     func playerStateChanged(_ videoPlayer: YouTubePlayerView, playerState: YouTubePlayerState) {}
     func playerQualityChanged(_ videoPlayer: YouTubePlayerView, playbackQuality: YouTubePlaybackQuality) {}
+    func playerCurrentTime(_ videoPlayer: YouTubePlayerView, currentTime: Double) {}
 
 }
 
@@ -104,6 +108,8 @@ open class YouTubePlayerView: UIView, WKNavigationDelegate {
 
     /** Used to respond to player events */
     open weak var delegate: YouTubePlayerDelegate?
+
+    fileprivate(set) open var currentTime: Double = 0.0
 
 
     // MARK: Various methods for initialization
@@ -350,6 +356,11 @@ open class YouTubePlayerView: UIView, WKNavigationDelegate {
                 }
 
                 break
+            case .PlayerCurrentTime:
+                if let newCurrentTime = Double(data!) {
+                    currentTime = newCurrentTime
+                    delegate?.playerCurrentTime(self, currentTime: currentTime)
+                }
             }
         }
     }

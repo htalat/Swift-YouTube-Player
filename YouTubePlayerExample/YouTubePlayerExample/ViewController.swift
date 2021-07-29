@@ -9,7 +9,10 @@
 import UIKit
 import YouTubePlayer
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, YouTubePlayerDelegate {
+    func playerCurrentTime(_ videoPlayer: YouTubePlayerView, currentTime: Double) {
+        print("time \(currentTime)")
+    }
 
     @IBOutlet var playerView: YouTubePlayerView!
     @IBOutlet var playButton: UIButton!
@@ -18,6 +21,7 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        playerView.delegate = self
         // Do any additional setup after loading the view, typically from a nib.
     }
 

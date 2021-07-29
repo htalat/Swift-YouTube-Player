@@ -26,10 +26,22 @@
         <script src="https://www.youtube.com/iframe_api"></script>
         <script>
             var player;
+            var time;
             YT.ready(function() {
                      player = new YT.Player('player', %@);
                      window.location.href = 'ytplayer://onYouTubeIframeAPIReady';
-                     });
+                     
+                         function updateTime() {
+                            var state = player.getPlayerState();
+                            if (state == YT.PlayerState.PLAYING) {
+                               time = player.getCurrentTime();
+                               window.location.href = 'ytplayer://onCurrentTime?data=' + time;
+                            }
+                         }
+                     window.setInterval(updateTime, 500);
+            });
+
+
                      function onReady(event) {
                          window.location.href = 'ytplayer://onReady?data=' + event.data;
                      }
